@@ -53,10 +53,10 @@ app.use(function (req, res, next) {
 // 正常请求的日志
 app.use(expressWinston.logger({
     transports: [
-        new (winston.transports.Console)({
-            json: true,
-            colorize: true
-        }),
+        // new (winston.transports.Console)({
+        //     json: true,
+        //     colorize: true
+        // }),
         new winston.transports.File({
             filename: 'logs/success.log'
         })
@@ -77,9 +77,9 @@ app.use(expressWinston.errorLogger({
     ]
 }));
 app.use(function (err, req, res, next) {
-    console.error(err)
+    // console.error(err)
     req.flash('error', err.message)
-    res.redirect('/posts')
+    res.redirect('/home');
 });
 
 // 监听端口，启动程序

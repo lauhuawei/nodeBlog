@@ -40,6 +40,18 @@ Post.plugin('contentToHtml', {
 
 
 module.exports = {
+    // addPost: function addPost(post) {
+    //     Post.find({}).sort({seq: -1}).then(function (res) {
+    //         console.log(res.length);
+    //         if (res.length > 0) {
+    //             console.log("3333")
+    //         } else {
+    //             post.seq = 1;
+    //             Post.create(post).exec();
+    //         }
+    //     })
+    //
+    // },
     // 创建一篇文章
     create: function create(post) {
         return Post.create(post).exec();
@@ -65,6 +77,7 @@ module.exports = {
             .find(query)
             .populate({path: 'author', model: 'User'})
             .sort({_id: -1})
+            .limit(3, 7)
             .addCreatedAt()
             .addCommentsCount()
             .contentToHtml()
