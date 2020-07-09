@@ -4,13 +4,13 @@ const router = express.Router()
 const checkLogin = require('../middlewares/check').checkLogin;
 const PostModel = require('../models/posts');
 const CommentModel = require('../models/comments');
-var https = require("https");
 // GET /posts 所有用户或者特定用户的文章页
 //   eg: GET /posts?author=xxx
 
 router.get('/', function (req, res, next) {
     const author = req.query.author;
-    // for (let i = 0; i <= 1; i++) {
+    // 创建数据
+    // for (let i = 0; i < 10; i++) {
     //     let post = {
     //         author: req.session.user._id,
     //         title: '使用react开发时，是否应该完全避免命令式代码？',
@@ -19,15 +19,17 @@ router.get('/', function (req, res, next) {
     //     };
     //     PostModel.addPost(post);
     // }
-
-    PostModel.getPosts(author)
-        .then(function (posts) {
-            res.render('home', {
-                posts: posts
-            })
+    const query = {
+        currentPage: 2,
+        showCount: 5,
+        author: author
+    };
+    PostModel.getPosts(query)
+        .then(function (rs) {
+            res.render('home', rs)
         })
         .catch(next)
 });
 
 
-module.exports = router
+module.exports = router;

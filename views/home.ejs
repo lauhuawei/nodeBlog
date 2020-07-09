@@ -2,7 +2,7 @@
 <div class="page-box">
     <div class="page-head-box"></div>
     <div class="page-body">
-        <% posts.forEach(function (post) { %>
+        <% data.forEach(function (post) { %>
             <div class="article-card">
                 <div class="article-card-title">
                     <a href="/posts/<%= post._id %>"><%= post.title %></a>
@@ -19,5 +19,5 @@
         <% }) %>
     </div>
 </div>
-
+<%- include('components/paging') %>
 <%- include('footer') %>

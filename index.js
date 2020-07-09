@@ -79,7 +79,7 @@ app.use(expressWinston.errorLogger({
 app.use(function (err, req, res, next) {
     // console.error(err)
     req.flash('error', err.message)
-    res.redirect('/home');
+    res.redirect('/404');
 });
 
 // 监听端口，启动程序

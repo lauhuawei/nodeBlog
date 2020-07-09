@@ -1,7 +1,6 @@
 const marked = require('marked')
-const Post = require('../lib/mongo').Post;
+const {Post, Counts} = require('../lib/mongo');
 const CommentModel = require('./comments')
-
 // 给 post 添加留言数 commentsCount
 Post.plugin('addCommentsCount', {
     afterFind: function (posts) {
@@ -40,18 +39,25 @@ Post.plugin('contentToHtml', {
 
 
 module.exports = {
-    // addPost: function addPost(post) {
-    //     Post.find({}).sort({seq: -1}).then(function (res) {
-    //         console.log(res.length);
-    //         if (res.length > 0) {
-    //             console.log("3333")
-    //         } else {
-    //             post.seq = 1;
-    //             Post.create(post).exec();
-    //         }
-    //     })
-    //
-    // },
+    addPost: function addPost(post) {
+        Counts.findOneAndUpdate(
+            {_id: 'postsId'},
+            {
+                $inc: {
+                    count: 1
+                }
+            },
+            {
+                returnOriginal: false,
+                upsert: true,
+            }
+        ).then(rs => {
+            if (rs.ok === 1) {
+                post.seq = rs.value.count;
+                Post.create(post).exec();
+            }
+        });
+    },
     // 创建一篇文章
     create: function create(post) {
         return Post.create(post).exec();
@@ -68,20 +74,32 @@ module.exports = {
     },
 
     // 按创建时间降序获取所有用户文章或者某个特定用户的所有文章
-    getPosts: function getPosts(author) {
-        const query = {}
-        if (author) {
-            query.author = author
+    getPosts: async function getPosts(params) {
+        const query = {};
+        const limit = params.showCount || 15;
+        if (params.author) {
+            query.author = params.author
         }
-        return Post
+        const count = await Post.count();
+        const postList = await Post
             .find(query)
             .populate({path: 'author', model: 'User'})
             .sort({_id: -1})
-            .limit(3, 7)
+            .limit(limit)
             .addCreatedAt()
             .addCommentsCount()
             .contentToHtml()
-            .exec()
+            .exec();
+        const page = {
+            showCount: limit,
+            currentPage: params.currentPage,
+            totalPage: Math.ceil(count / limit),
+            totalCount: count
+        };
+        return {
+            ...page,
+            data: postList
+        }
     },
 
     // 通过文章 id 给 pv 加 1

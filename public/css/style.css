@@ -36,6 +36,10 @@ img {
     background: rgba(0, 0, 0, 0.3);
 }
 
+body {
+    background: var(--bgColor);
+}
+
 .nav-left {
     position: fixed;
     left: 50%;
@@ -61,7 +65,7 @@ img {
     overflow-x: hidden;
     overflow-y: auto;
     color: #333;
-    background: var(--bgColor);
+
 }
 
 .page-body {
@@ -185,6 +189,32 @@ img {
     padding-left: 24px;
     word-break: break-all;
 }
-.comment-list .comment-item .author{
 
+.comment-list .comment-item .author {
+
+}
+
+.paging-box {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.paging-box .paging-btn {
+    display: inline-block;
+    line-height: 32px;
+    min-width: 32px;
+    padding: 0 8px;
+    font-size: 12px;
+    text-align: center;
+    color: var(--color);
+    border: 1px solid var(--color);
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.paging-box .paging-btn.paging-btn-active,
+.paging-box .paging-btn:hover {
+    color: #fff;
+    border: 1px solid var(--color);
+    background: var(--color);
 }
